@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>Tick It - Welcome</title>ś
+{% endblock %}
+
+{% block body %}
+
+        <div class="jumbotron">
+            <br></br><br></br><br>
+                <h1 align="center">Hello there, your good name?</h1>
+            <br></br></br></br>
+        </div>
+
+        <div class="col-6 mx-auto" align="center">
+            <form action="/content" method="post">
+                <br></br>
+                <input  id="hello" class="form-control col-4" type="text" align="center" name="iusername" placeholder ="I'm ">
+                <br></br>
+                <button class="btn btn-primary" >Lets Go!</button>
+            </form>  
+        </div>
+
+
+{% endblock %}
