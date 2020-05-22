@@ -10,25 +10,26 @@ class Tickit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     itemdesc = db.Column(db.String(200), nullable=False)
     itemdate = db.Column(db.DateTime, default=datetime.now)
-    #itemuser = db.Column(db.String(200), nullable=False)
 
     def __repr__(self):
         return '<Task %r>' % self.id 
+
 
 @app.route('/')
 def index():
         return render_template("index.html")
 
 @app.route('/content', methods=['GET', 'POST'])
-def content():    
+def content():  
+
         if request.method == 'POST':
-            username = request.form['iusername']
             existingItems = Tickit.query.order_by(Tickit.itemdate).all()
+            username = request.form['iusername']
             return render_template("content.html", uname=username, tasks=existingItems)
         else:
             #return "This is what other routes are seeing"
-            username = request.form.get("hello")
             existingItems = Tickit.query.order_by(Tickit.itemdate).all()
+            username = "find"
             return render_template("content.html", uname=username, tasks=existingItems)
 
 
@@ -44,23 +45,48 @@ def create():
         except:
             return "There was an issue adding the task to db"
     else:
+        existingItems = Tickit.query.order_by(Tickit.itemdate).all() 
+        username = "find"   
+        return render_template("content.html", uname=username, tasks=existingItems, cross=200)
+
+
+@app.route('/tick/<int:id>', methods=['GET', 'POST'])
+def tick(id):
+    if request.method == 'POST':
+        task_to_tick = Tickit.query.get_or_404(id)
         existingItems = Tickit.query.order_by(Tickit.itemdate).all()    
         username = request.form['iusername']
-        return render_template("content.html", uname=username, tasks=existingItems)
+        return render_template("content.html", uname=username, tasks=existingItems, cross=100)
+    else:
+        task_to_tick = Tickit.query.get_or_404(id)
+        existingItems = Tickit.query.order_by(Tickit.itemdate).all()
+        username = "find"    
+        return render_template("content.html", uname=username, tasks=existingItems, cross=100)
 
-
-@app.route('/tick/<int:id>')
-def tick(id):
-    task_to_tick = Tickit.query.get_or_404(id)
-    itemObj = Tickit.itemdesc
-    return redirect('/content')
+@app.route('/untick/<int:id>', methods=['GET', 'POST'])
+def untick(id):
+    if request.method == 'POST':
+        task_to_tick = Tickit.query.get_or_404(id)
+        existingItems = Tickit.query.order_by(Tickit.itemdate).all()    
+        username = request.form['iusername']
+        return render_template("content.html", uname=username, tasks=existingItems, cross=200)
+    else:
+        task_to_tick = Tickit.query.get_or_404(id)
+        existingItems = Tickit.query.order_by(Tickit.itemdate).all()  
+        username = "find"  
+        return render_template("content.html", uname=username, tasks=existingItems, cross=200)
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
-    if request.methods =='POST':
-        pass
+    if request.method =='GET':
+        task_to_edit = Tickit.query.get_or_404(id)
+        try:
+
+            return redirect('/content')
+        except:
+            return "There was a problem editing that task"
     else:
-        pass
+        return redirect('/content')
 
 @app.route('/delete/<int:id>' , methods=['GET', 'POST'])
 def delete(id):
@@ -76,4 +102,4 @@ def delete(id):
         return redirect('/content')
 
 if __name__ == "__main__":
-     app.run(debug = True)
+    app.run(debug = True)
