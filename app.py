@@ -60,14 +60,15 @@ def tick(id):
     else:
         task_to_tick = Tickit.query.get_or_404(id)
         existingItems = Tickit.query.order_by(Tickit.itemdate).all()
-        username = "find"    
+        username = "find" 
+        #crosseditem = task_to_tick.itemdesc   
         return render_template("content.html", uname=username, tasks=existingItems, cross=100)
 
 @app.route('/untick/<int:id>', methods=['GET', 'POST'])
 def untick(id):
     if request.method == 'POST':
         task_to_tick = Tickit.query.get_or_404(id)
-        existingItems = Tickit.query.order_by(Tickit.itemdate).all()    
+        existingItems = Tickit.query.order_by(Tickit.itemdate).all()
         username = request.form['iusername']
         return render_template("content.html", uname=username, tasks=existingItems, cross=200)
     else:
